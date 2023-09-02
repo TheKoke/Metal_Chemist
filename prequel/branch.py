@@ -11,6 +11,7 @@ class BoundType(Enum):
     SINGLE = 1
     DOUBLE = 2
     TRIPLE = 3
+    QUADRUPLE = 4
 
 
 class Brancher:
@@ -31,8 +32,11 @@ class Brancher:
 
         return adj
 
-    def mutate(self) -> None:
-        pass
+    def mutate(self, nc: int, elt: str) -> None:
+        if nc <= -1 or nc >= len(self.atoms):
+            return
+        
+        self.atoms[nc] = Atom(elt, self.atoms[nc].id, self.atoms[nc].neighrs)
 
 
 if __name__ == '__main__':

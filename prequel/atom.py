@@ -29,6 +29,20 @@ WEIGHT = {
     'Br': 80.0
 }
 
+ORDER = {
+    'C' : 1,
+    'H' : 2,
+    'O' : 3, 
+    'B' : 4,
+    'Br': 5,
+    'Cl': 6,
+    'F' : 7,
+    'Mg': 8,
+    'N' : 9,
+    'P' : 10,
+    'S' : 11
+}
+
 
 class Atom:
     
@@ -46,9 +60,10 @@ class Atom:
     
     def __str__(self) -> str:
         string = f'Atom({self.__element}.{self.__id}'
+        neighrs_queue = sorted(self.__neighrs, key=lambda x: ORDER[x.element] * 100 + x.id)
 
         neighrs = []
-        for atom in set(self.__neighrs):
+        for atom in neighrs_queue:
             if atom.element == 'H':
                 neighrs.append(f'{atom.element}')
 
