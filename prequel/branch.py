@@ -38,6 +38,24 @@ class Brancher:
         
         self.atoms[nc] = Atom(elt, self.atoms[nc].id, self.atoms[nc].neighrs)
 
+    def lock(self) -> None:
+        pass
+
+    def unlock(self) -> None:
+        pass
+
+
+class Connector:
+    def __init__(self, first: Brancher, second: Brancher) -> None:
+        self.first = first
+        self.second = second
+
+    def adjacency(self) -> list[list[BoundType]]:
+        pass
+
+    def add_boundary(self, c1: int, c2: int, bound: BoundType = BoundType.SINGLE):
+        pass
+
 
 if __name__ == '__main__':
     pass

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from atom import Atom, ORDER
-from branch import Brancher, BoundType
+from branch import Brancher, BoundType, Connector
 from errors import UnlockedMolecule, LockedMolecule, EmptyMolecule, InvalidBond
 
 
@@ -14,7 +14,7 @@ class Molecule:
         self.atoms: list[Atom] = list()
         self.branchers: list[Brancher] = list()
 
-        self.connectors = None
+        self.connectors: list[Connector] = None
         self.__id_tracker = 1
 
     @property
@@ -105,12 +105,18 @@ class Molecule:
         if self.is_closed:
             raise LockedMolecule('Molecule is already locked.')
         
+        for branch in self.branchers:
+            branch.lock()
+        
         self.is_closed = True
         return self
 
     def unlock(self) -> Molecule:
         if not self.is_closed:
             raise UnlockedMolecule('Molecule is already unlocked.')
+        
+        for branch in self.branchers:
+            branch.unlock()
         
         self.is_closed = True
         return self
