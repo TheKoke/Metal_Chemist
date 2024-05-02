@@ -3,6 +3,7 @@ from __future__ import annotations
 from atom import Atom
 from errors import EmptyMolecule, UnlockedMolecule, LockedMolecule, InvalidBond
 
+
 class Molecule:
     def __init__(self, name: str = "") -> None:
         self.name = name
