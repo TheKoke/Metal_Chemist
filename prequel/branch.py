@@ -50,13 +50,6 @@ class Branch:
         self.adj[x_index][y_index] = bounds
         self.adj[y_index][x_index] = bounds
 
-    def remove_bound(self, x: Atom, y: Atom) -> None:
-        x_index = self.atoms.index(x)
-        y_index = self.atoms.index(y)
-
-        self.adj[x_index][y_index] = 0
-        self.adj[y_index][x_index] = 0
-
     @staticmethod
     def adjacent(x: Atom, y: Atom) -> bool:
         return x in y.neighrs and y in x.neighrs
