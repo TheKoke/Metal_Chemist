@@ -19,29 +19,14 @@ class Branch:
 
         return adj
     
-    def add_atom(self, x: Atom) -> None:
-        new_adjacency = self.adj.copy()
+    def mutate(self, nc: int, elt: str) -> None:
+        pass
+    
+    def add(self, nc: int, elt: str) -> None:
+        pass
 
-        for i in range(len(new_adjacency)):
-            new_adjacency[i].append(0)
-
-        new_adjacency.append([0] * len(new_adjacency) + 1)
-
-        del self.adj
-        self.adj = new_adjacency
-        self.atoms.append(x)
-
-    def remove_atom(self, x: Atom) -> None:
-        index = self.atoms.index(x)
-        new_adjacency = self.adj.copy()
-
-        new_adjacency.pop(index)
-        for i in range(len(new_adjacency)):
-            new_adjacency[i].pop(index)
-
-        del self.adj
-        self.adj = new_adjacency
-        self.atoms.append(x)
+    def add_chaining(self, nc: int, *args: list[str]) -> None:
+        pass
 
     def add_bound(self, x: Atom, y: Atom, bounds: int = 1) -> None:
         x_index = self.atoms.index(x)
