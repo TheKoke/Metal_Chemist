@@ -59,13 +59,14 @@ class Atom:
         return self.id == other.id
     
     def __str__(self) -> str:
-        string = f'Atom({self.__element}.{self.__id}'
+        string = f'Atom({self.__element}.{self.__id}: '
         neighrs_queue = sorted(self.__neighrs, key=lambda x: ORDER[x.element] * 100 + x.id)
 
         neighrs = []
         for atom in neighrs_queue:
             if atom.element == 'H':
                 neighrs.append(f'{atom.element}')
+                continue
 
             neighrs.append(f'{atom.element}{atom.id}')
 
@@ -92,7 +93,7 @@ class Atom:
     
     @property
     def neighrs(self) -> list[Atom]:
-        return self.__neighrs[:]
+        return self.__neighrs.copy()
     
     def add_neighbor(self, atom: Atom) -> bool:
         if self.valence <= len(self.neighrs):
@@ -100,6 +101,16 @@ class Atom:
         
         self.__neighrs.append(atom)
         return True
+    
+    def fill(self, id: int) -> None:
+        while len(self.neighrs) < self.valence:
+            self.add_neighbor(Atom('H', id, [self]))
+            id += 1
+
+    def empty(self) -> None:
+        while any([atom for atom in self.__neighrs if atom.element == 'H']):
+            found = next(i for i in range(len(self.__neighrs)) if self.__neighrs[i].element == 'H')
+            self.neighrs.pop(found)
 
 
 if __name__ == '__main__':
