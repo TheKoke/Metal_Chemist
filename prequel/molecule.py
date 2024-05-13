@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from atom import Atom, ORDER
+from atom import Atom, ORDER, VALENCE
 from errors import EmptyMolecule, UnlockedMolecule, LockedMolecule, InvalidBond
 
 
@@ -52,7 +52,6 @@ class Molecule:
         
         for nc in args:
             new_branch = [Atom('C', self.__id_tracker + i, []) for i in range(nc)]
-
             self.__id_tracker += nc
 
             for i in range(len(new_branch)):
@@ -73,9 +72,17 @@ class Molecule:
         
         for arg in args:
             nc1, nb1, nc2, nb2 = arg
+            if nc1 == nc2 and nb1 == nb2:
+                raise InvalidBond(f'Self bonding attempt at {str(self.__branches[nb1 - 1][nc1 - 1])}')
+            
+            first = self.__branches[nb1 - 1][nc1 - 1]
+            second = self.__branches[nb2 - 1][nc2 - 1]
 
-            self.__branches[nb1 - 1][nc1 - 1].add_neighbor(self.__branches[nb2 - 1][nc2 - 1])
-            self.__branches[nb2 - 1][nc2 - 1].add_neighbor(self.__branches[nb1 - 1][nc1 - 1])
+            if len(first.neighrs) >= first.valence or len(second.neighrs) >= second.valence:
+                raise InvalidBond(f'Invalid bounder on {str(first)} with {str(second)}, atoms are full.')
+
+            first.add_neighbor(second)
+            second.add_neighbor(first)
 
         return self
 
@@ -87,10 +94,16 @@ class Molecule:
             nc, nb, elt = arg
 
             replaced = self.__branches[nb - 1][nc - 1]
+            if len(replaced.neighrs) > VALENCE[elt]:
+                raise InvalidBond(f'Invalid mutating {str(replaced)} to {elt}.')
+
             candidate = Atom(elt, replaced.id, replaced.neighrs)
 
             self.__branches[nb - 1][nc - 1] = candidate
             self.__atoms[self.__atoms.index(replaced)] = candidate
+
+            for neighr in replaced.neighrs:
+                neighr.mutate_neighbor(replaced.id, candidate)
 
         return self
 
@@ -100,6 +113,8 @@ class Molecule:
         
         for arg in args:
             nc, nb, elt = arg
+            if len(self.__branches[nb - 1][nc - 1].neighrs) >= self.__branches[nb - 1][nc - 1].valence:
+                raise InvalidBond(f'Invalid adding element {elt} to {str(self.__branches[nb - 1][nc - 1])}.')
 
             candidate = Atom(elt, self.__id_tracker, [self.__branches[nb - 1][nc - 1]])
 
@@ -116,6 +131,9 @@ class Molecule:
         
         for arg in args:
             nc, nb = arg[0], arg[1]
+            if len(self.__branches[nb - 1][nc - 1].neighrs) >= self.__branches[nb - 1][nc - 1].valence:
+                raise InvalidBond(f'Invalid adding chain to {str(self.__branches[nb - 1][nc - 1])}.')
+
             chain = [Atom(arg[i], self.__id_tracker + i, []) for i in range(2, len(arg))]
             self.__id_tracker += len(arg) - 1 # -2 + 1
 

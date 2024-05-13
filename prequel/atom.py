@@ -59,18 +59,23 @@ class Atom:
         return self.id == other.id
     
     def __str__(self) -> str:
-        string = f'Atom({self.__element}.{self.__id}: '
-        neighrs_queue = sorted(self.__neighrs, key=lambda x: ORDER[x.element] * 100 + x.id)
+        string = f'Atom({self.__element}.{self.__id}'
+        neighrs_queue = sorted(self.__neighrs, key=lambda x: ORDER[x.element] * 10 + x.id)
 
         neighrs = []
         for atom in neighrs_queue:
-            if atom.element == 'H':
-                neighrs.append(f'{atom.element}')
+            if atom.element == 'H': 
                 continue
 
             neighrs.append(f'{atom.element}{atom.id}')
 
-        string += ','.join(neighrs) if len(neighrs) > 0 else ''
+        for atom in neighrs_queue:
+            if atom.element == 'H':
+                neighrs.append(f'{atom.element}')
+        
+        if len(neighrs) > 0:
+            string += ': '
+            string += ','.join(neighrs)
 
         string += ')'
         return string
@@ -100,6 +105,15 @@ class Atom:
             return False
         
         self.__neighrs.append(atom)
+        return True
+    
+    def mutate_neighbor(self, origin_id: int, mutating: Atom) -> bool:
+        try:
+            replaced_index = next(i for i in range(len(self.__neighrs)) if self.__neighrs[i].id == origin_id)
+        except:
+            return False
+
+        self.__neighrs[replaced_index] = mutating
         return True
     
     def fill(self, id: int) -> None:
