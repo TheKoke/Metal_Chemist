@@ -1,4 +1,4 @@
-# Metal_Chemist
+# Metal Chemist
 **Metal Chemist** — 2 problems (***katas***) from **[codewars.com](https://www.codewars.com/)**.
 
 There are problems about bulding and parsing notation real-world molecules to our code. ***Memory administration, buddy***.
@@ -14,7 +14,7 @@ There is meaning of our files:
 atom.py         | File with implementation of `Atom` class.
 molecule.py     | File with implementation of `Molecule` class.
 errors.py       | File with certain python errors.
-onefiler.py     | File for upload our solution to codewars. (They're allow only on file).
+onefiler.py     | File for upload our solution to codewars. (They're allow only onу file).
 description.txt | Tasks and requirements of problem translated to russian.
 tests.txt       | Basic tests from author of this problem.
 

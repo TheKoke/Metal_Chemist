@@ -1,5 +1,4 @@
 from __future__ import annotations
-from enum import Enum
 
 
 VALENCE = { 'H' : 1, 'B' : 3, 'C' : 4, 'N' : 3, 'O' : 2, 'F' : 1, 'Mg': 2, 'P' : 3, 'S' : 2, 'Cl': 1, 'Br': 1 }
@@ -39,18 +38,23 @@ class Atom:
         return self.id == other.id
     
     def __str__(self) -> str:
-        string = f'Atom({self.__element}.{self.__id}: '
-        neighrs_queue = sorted(self.__neighrs, key=lambda x: ORDER[x.element] * 100 + x.id)
+        string = f'Atom({self.__element}.{self.__id}'
+        neighrs_queue = sorted(self.__neighrs, key=lambda x: ORDER[x.element] * 10 + x.id)
 
         neighrs = []
         for atom in neighrs_queue:
-            if atom.element == 'H':
-                neighrs.append(f'{atom.element}')
+            if atom.element == 'H': 
                 continue
 
             neighrs.append(f'{atom.element}{atom.id}')
 
-        string += ','.join(neighrs) if len(neighrs) > 0 else ''
+        for atom in neighrs_queue:
+            if atom.element == 'H':
+                neighrs.append(f'{atom.element}')
+        
+        if len(neighrs) > 0:
+            string += ': '
+            string += ','.join(neighrs)
 
         string += ')'
         return string
@@ -80,6 +84,15 @@ class Atom:
             return False
         
         self.__neighrs.append(atom)
+        return True
+    
+    def mutate_neighbor(self, origin_id: int, mutating: Atom) -> bool:
+        try:
+            replaced_index = next(i for i in range(len(self.__neighrs)) if self.__neighrs[i].id == origin_id)
+        except:
+            return False
+
+        self.__neighrs[replaced_index] = mutating
         return True
     
     def fill(self, id: int) -> None:
@@ -161,9 +174,17 @@ class Molecule:
         
         for arg in args:
             nc1, nb1, nc2, nb2 = arg
+            if nc1 == nc2 and nb1 == nb2:
+                raise InvalidBond(f'Self bonding attempt at {str(self.__branches[nb1 - 1][nc1 - 1])}')
+            
+            first = self.__branches[nb1 - 1][nc1 - 1]
+            second = self.__branches[nb2 - 1][nc2 - 1]
 
-            self.__branches[nb1 - 1][nc1 - 1].add_neighbor(self.__branches[nb2 - 1][nc2 - 1])
-            self.__branches[nb2 - 1][nc2 - 1].add_neighbor(self.__branches[nb1 - 1][nc1 - 1])
+            if len(first.neighrs) >= first.valence or len(second.neighrs) >= second.valence:
+                raise InvalidBond(f'Invalid bounder on {str(first)} with {str(second)}, atoms are full.')
+
+            first.add_neighbor(second)
+            second.add_neighbor(first)
 
         return self
 
@@ -175,10 +196,16 @@ class Molecule:
             nc, nb, elt = arg
 
             replaced = self.__branches[nb - 1][nc - 1]
+            if len(replaced.neighrs) > VALENCE[elt]:
+                raise InvalidBond(f'Invalid mutating {str(replaced)} to {elt}.')
+
             candidate = Atom(elt, replaced.id, replaced.neighrs)
 
             self.__branches[nb - 1][nc - 1] = candidate
             self.__atoms[self.__atoms.index(replaced)] = candidate
+
+            for neighr in replaced.neighrs:
+                neighr.mutate_neighbor(replaced.id, candidate)
 
         return self
 
@@ -188,6 +215,8 @@ class Molecule:
         
         for arg in args:
             nc, nb, elt = arg
+            if len(self.__branches[nb - 1][nc - 1].neighrs) >= self.__branches[nb - 1][nc - 1].valence:
+                raise InvalidBond(f'Invalid adding element {elt} to {str(self.__branches[nb - 1][nc - 1])}.')
 
             candidate = Atom(elt, self.__id_tracker, [self.__branches[nb - 1][nc - 1]])
 
@@ -204,6 +233,9 @@ class Molecule:
         
         for arg in args:
             nc, nb = arg[0], arg[1]
+            if len(self.__branches[nb - 1][nc - 1].neighrs) >= self.__branches[nb - 1][nc - 1].valence:
+                raise InvalidBond(f'Invalid adding chain to {str(self.__branches[nb - 1][nc - 1])}.')
+
             chain = [Atom(arg[i], self.__id_tracker + i, []) for i in range(2, len(arg))]
             self.__id_tracker += len(arg) - 1 # -2 + 1
 
