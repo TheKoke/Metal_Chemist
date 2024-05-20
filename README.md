@@ -14,8 +14,8 @@ There is meaning of our files:
 atom.py         | File with implementation of `Atom` class.
 molecule.py     | File with implementation of `Molecule` class.
 errors.py       | File with certain python errors.
-onefiler.py     | File for upload our solution to codewars. (They're allow only onу file).
+onefiler.py     | File for upload our solution to codewars. (They're allow only one file).
 description.txt | Tasks and requirements of problem translated to russian.
 tests.txt       | Basic tests from author of this problem.
 
-Second part of problem will solved by ourselves in near future.
+Second part of problem in process..
