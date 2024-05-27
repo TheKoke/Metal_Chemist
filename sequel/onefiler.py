@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+
 class ParseHer:
     
     RADICALS    = ["meth", "eth", "prop", "but",   "pent",  "hex",  "hept",  "oct",  "non",  "dec",  "undec",  "dodec",  "tridec",  "tetradec",  "pentadec",  "hexadec",  "heptadec",  "octadec",  "nonadec"]
@@ -11,7 +12,7 @@ class ParseHer:
     
     def __init__(self, name: str) -> None:
         pass
-    
+
     def parse(self) -> dict[str, int]:
         pass
 
