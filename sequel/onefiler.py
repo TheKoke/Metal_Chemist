@@ -3,6 +3,7 @@ from __future__ import annotations
 
 class ParseHer:
     
+    CHAINS      = ["ane", "ene", "yne"]
     RADICALS    = ["meth", "eth", "prop", "but",   "pent",  "hex",  "hept",  "oct",  "non",  "dec",  "undec",  "dodec",  "tridec",  "tetradec",  "pentadec",  "hexadec",  "heptadec",  "octadec",  "nonadec"]
     MULTIPLIERS = [        "di",  "tri",  "tetra", "penta", "hexa", "hepta", "octa", "nona", "deca", "undeca", "dodeca", "trideca", "tetradeca", "pentadeca", "hexadeca", "heptadeca", "octadeca", "nonadeca"]
     
@@ -14,6 +15,18 @@ class ParseHer:
         pass
 
     def parse(self) -> dict[str, int]:
+        pass
+
+    def find_alkyl(self) -> None:
+        pass
+
+    def find_indexes(self) -> None:
+        pass
+
+    def find_radical(self) -> None:
+        pass
+
+    def find_chain(self) -> None:
         pass
 
 
