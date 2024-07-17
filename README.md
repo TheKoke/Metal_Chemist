@@ -1,7 +1,7 @@
 # Metal Chemist
 **Metal Chemist** — 2 problems (***katas***) from **[codewars.com](https://www.codewars.com/)**.
 
-There are problems about bulding and parsing notation real-world molecules to our code. ***Memory administration, buddy***.
+These are problems about building and parsing notation of real-world molecules to our code. ***Memory administration, buddy***.
 
 First problem is about building Molecule and Atom classes with functionaties, of course. **[Full Metal Chemist #1](https://www.codewars.com/kata/5a27ca7ab6cfd70f9300007a)**.
 
